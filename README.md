@@ -1,7 +1,7 @@
 
 # 🐁 Mouse
 
-![go](https://img.shields.io/badge/Go-v1.22-blue)
+![go](https://img.shields.io/github/go-mod/go-version/wajeht/mouse)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/wajeht/mouse/blob/main/LICENSE) [![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/wajeht/mouse)
 
 Move mouse in a square — why? why not?
