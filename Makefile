@@ -1,4 +1,6 @@
 push:
+	@go fmt
+	@go test
 	@git auto
 
 test:
