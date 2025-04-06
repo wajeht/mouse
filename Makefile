@@ -1,5 +1,5 @@
 push:
-	@go fmt
+	@make test
 	@go test
 	@git auto
 
