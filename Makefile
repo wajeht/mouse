@@ -1,6 +1,6 @@
 push:
 	@make test
-	@go test
+	@make format
 	@git auto
 
 test:
