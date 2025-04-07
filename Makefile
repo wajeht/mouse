@@ -10,7 +10,7 @@ build:
 	@go build -v ./...
 
 run:
-	@go run main.go
+	@go run ./cmd/main.go
 
 format:
 	@go fmt ./...

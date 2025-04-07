@@ -1,7 +1,9 @@
 package main
 
-import "github.com/wajeht/mouse/internal/mouse"
+import (
+	"fmt"
+)
 
 func main() {
-	mouse.Run()
+	fmt.Println("main")
 }
