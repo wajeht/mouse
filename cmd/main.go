@@ -4,11 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/wajeht/mouse/internal/mouse"
 )
@@ -20,9 +18,7 @@ func main() {
 	flag.BoolVar(&cfg.DryRun, "dry-run", false, "Simulate actions only")
 	flag.Parse()
 
-	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
-	ctrl := &mouse.Roboto{}
-	mover := mouse.NewMover(cfg, ctrl, rng)
+	m := mouse.New(cfg)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -36,7 +32,8 @@ func main() {
 		cancel()
 	}()
 
-	if err := mover.Run(ctx); err != nil && err != context.Canceled {
+	if err := m.Run(ctx); err != nil {
 		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
 	}
 }

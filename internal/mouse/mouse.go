@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+
+	"github.com/go-vgo/robotgo"
 )
 
 type Config struct {
@@ -12,29 +14,34 @@ type Config struct {
 	DryRun bool
 }
 
-type Controller interface {
-	GetMousePos() (int, int)
-	MoveMouse(x, y int)
-	PressKey(key string)
-	Sleep(ms int)
+type Mouse struct {
+	cfg Config
 }
 
-type Mover struct {
-	cfg  Config
-	rng  *rand.Rand
-	ctrl Controller
+func New(cfg Config) *Mouse {
+	return &Mouse{cfg: cfg}
 }
 
-func NewMover(cfg Config, ctrl Controller, rng *rand.Rand) *Mover {
-	return &Mover{
-		cfg:  cfg,
-		rng:  rng,
-		ctrl: ctrl,
-	}
+func (m *Mouse) getMousePos() (int, int) {
+	return robotgo.Location()
 }
 
-func (m *Mover) move(dir string, dist int) error {
-	x, y := m.ctrl.GetMousePos()
+func (m *Mouse) moveMouse(x, y int) {
+	robotgo.MoveSmooth(x, y, 1.0, 10.0)
+}
+
+func (m *Mouse) pressKey(key string) {
+	robotgo.KeyToggle(key, "down")
+	robotgo.MilliSleep(50)
+	robotgo.KeyToggle(key, "up")
+}
+
+func (m *Mouse) sleep(ms int) {
+	robotgo.MilliSleep(ms)
+}
+
+func (m *Mouse) move(dir string, dist int) error {
+	x, y := m.getMousePos()
 	switch dir {
 	case "left":
 		x -= dist
@@ -47,33 +54,33 @@ func (m *Mover) move(dir string, dist int) error {
 	default:
 		return fmt.Errorf("invalid direction: %s", dir)
 	}
-	m.ctrl.MoveMouse(x, y)
+	m.moveMouse(x, y)
 	return nil
 }
 
-func (m *Mover) pressRandomKey() {
+func (m *Mouse) pressRandomKey() {
 	keys := []string{"escape", "tab", "shift", "alt", "capslock", "up", "down", "left", "right"}
-	key := keys[m.rng.Intn(len(keys))]
+	key := keys[rand.Intn(len(keys))]
 
 	if m.cfg.DryRun {
 		fmt.Printf("Would press key: %s\n", key)
 		return
 	}
 
-	m.ctrl.PressKey(key)
+	m.pressKey(key)
 }
 
-func (m *Mover) moveInSquare() error {
+func (m *Mouse) moveInSquare() error {
 	for _, dir := range []string{"right", "down", "left", "up"} {
 		if err := m.move(dir, m.cfg.Size); err != nil {
 			return err
 		}
-		m.ctrl.Sleep(m.cfg.Delay)
+		m.sleep(m.cfg.Delay)
 	}
 	return nil
 }
 
-func (m *Mover) Run(ctx context.Context) error {
+func (m *Mouse) Run(ctx context.Context) error {
 	fmt.Println("Running... (Ctrl+C to stop)")
 
 	for {
