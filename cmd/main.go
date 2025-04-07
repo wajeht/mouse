@@ -21,7 +21,7 @@ func main() {
 	flag.Parse()
 
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
-	ctrl := &mouse.RobotController{}
+	ctrl := &mouse.Roboto{}
 	mover := mouse.NewMover(cfg, ctrl, rng)
 
 	ctx, cancel := context.WithCancel(context.Background())

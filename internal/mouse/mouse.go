@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-
-	"github.com/go-vgo/robotgo"
 )
 
 type Config struct {
@@ -19,26 +17,6 @@ type Controller interface {
 	MoveMouse(x, y int)
 	PressKey(key string)
 	Sleep(ms int)
-}
-
-type RobotController struct{}
-
-func (r *RobotController) GetMousePos() (int, int) {
-	return robotgo.Location()
-}
-
-func (r *RobotController) MoveMouse(x, y int) {
-	robotgo.MoveSmooth(x, y, 1.0, 10.0)
-}
-
-func (r *RobotController) PressKey(key string) {
-	robotgo.KeyToggle(key, "down")
-	robotgo.MilliSleep(50)
-	robotgo.KeyToggle(key, "up")
-}
-
-func (r *RobotController) Sleep(ms int) {
-	robotgo.MilliSleep(ms)
 }
 
 type Mover struct {
